@@ -9,210 +9,22 @@
     <meta name="renderer" content="webkit">
 
     <title>中药打印</title>
+    <link rel="stylesheet" type="text/css" href="./common.css">
     <script type="text/javascript" src="./jquery.min.js"></script>
    
 </head>
 <style>
-    * {
-        box-sizing: border-box;
-    }
-
-    .clearfix:before {
-        display: table;
-        content: " ";
-    }
-
-    .clearfix:after {
-        display: table;
-        content: " ";
-        clear: both;
-    }
-
-    .text-right {
-        text-align: right;
-    }
-
-    .text-left {
-        text-align: left;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    p {
-        margin: 0;
-    }
-
-    label {
-        line-height: 1.42857143;
-        vertical-align: unset;
-    }
-
-    /*打印*/
-    @media print {
-        @page {
-            size: A5 portrait;
-            margin: 0;
-        }
-
-        body * {
-            display: none;
-        }
-
-        body {
-            padding: 0;
-        }
-
-        #printZone,
-        #printArea,
-        #printArea * {
-            display: block;
-        }
-
-        #printZone {
-            left: 0;
-            top: 0;
-        }
-
-    }
-
-    /*打印*/
-    @media screen {
-        .printBtn {
-            display: inline-block;
-            float: right;
-        }
-    }
-
-    body {
-        width: 100%;
-        height: 100%;
-        position: relative;
-    }
-
-    #printZone {
-        position: absolute;
-    }
-
-    #printZone span {
-        display: inline;
-    }
-
-    .areas .col-sm-10,
-    .areas .col-sm-12,
-    .areas .col-sm-1,
-    .areas .col-sm-2,
-    .areas .col-sm-3,
-    .areas .col-sm-4,
-    .areas .col-sm-5,
-    .areas .col-sm-6,
-    .areas .col-sm-6,
-    .areas .col-sm-7,
-    .areas .col-sm-8,
-    .areas .col-sm-9 {
-        float: left;
-        position: relative;
-        min-height: 1px;
-        padding-left: 2mm;
-        padding-right: 2mm;
-    }
-
-    .areas .col-sm-3 {
-        width: 25%;
-    }
-
-    .areas .col-sm-4 {
-        width: 33.333333%;
-    }
-
-    .areas .col-sm-6 {
-        width: 50%;
-    }
-
-    .areas {
-        position: relative;
-        font-size: 10.5pt;
-        width: 148mm;
-        height: 209mm;
-        padding: 6mm;
-        overflow: hidden;
-        font-family: 'Arial Normal', 'Arial';
-        /*border: 1px solid #000;*/
-    }
-
-    .areas > h4 {
-        text-align: center;
-        margin: 0;
-    }
-
-    .areas > h5 {
-        font-size: 13pt;
-        text-align: center;
-        margin: 0 0 2mm 0;
-    }
-
-    .titleArea {
-        margin-bottom: 0.5mm;
-        padding-bottom: 0.5mm;
-        border-bottom: 1pt solid #000;
-    }
-
-    .topArea {
-        border-bottom: 1pt solid #000;
-    }
-
-    .solution,
-    .topArea label,
     .groups.three-line {
         font-size: 10.5pt;
     }
 
-    .topArea .line:not(:last-child) {
-        margin-bottom: 2mm;
-    }
-
-    .topArea .line:last-child label {
-        vertical-align: top;
-        word-break: break-all;
-    }
-
-    .topArea .line .label-left {
-        max-width: 20mm;
-    }
-
-    .topArea .line .label-right {
-        max-width: 103mm;
-        word-break: break-all;
-    }
-
     .middleArea {
         height: 102mm;
-        margin: 2mm 0;
-        overflow: hidden;
-    }
-
-    .middleArea h4 {
-        margin: 0 0 2mm 0;
     }
 
     .content {
         display: flex;
         flex-wrap: wrap;
-    }
-
-    #printZone .pr,
-    .middleArea label.text-right {
-        padding-right: 0;
-    }
-
-    #printZone .pl,
-    .middleArea .line > div {
-        padding-left: 0;
-    }
-
-    .middleArea p {
-        font-size: 12pt;
     }
 
     .groups {
@@ -280,50 +92,11 @@
         width: 30mm;
     }
 
-    .bottomArea {
-        position: absolute;
-        left: 6mm;
-        right: 6mm;
-        bottom: 10mm;
-    }
-
-    .bottomArea .bd {
-        margin: 1mm 0 2mm 0;
-        border-bottom: 1pt solid #000;
-    }
-
-    .bottomArea .stuff .col-sm-4:first-child,
-    .bottomArea .stuff .col-sm-4:last-child {
-        width: 38mm;
-    }
-
-    .bottomArea .stuff .col-sm-4:nth-child(2) {
-        width: 52mm;
-    }
-
-    .topArea,
-    .middleArea,
-    .bottomArea .stuff {
-        padding: 0 4mm;
-    }
-
-    .middleArea .line,
-    .bottomArea .stuff > div {
-        margin-bottom: 1mm;
-    }
-
-    .allergy-line label {
-        font-weight: normal;
-    }
-
-    .alergy-line label,
+    .allergy-line label,
     .result-line label {
         margin: 0;
     }
 
-    .result-line,
-    .areas h4,
-    .areas h5,
     .strong {
         font-weight: 700;
     }
