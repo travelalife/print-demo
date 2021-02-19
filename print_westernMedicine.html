@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="renderer" content="webkit">
+
+    <title>西药打印</title>
+    <script type="text/javascript" src="./jquery.min.js"></script>
+   
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+        line-height: 1.42857143;
+    }
+
+    .clearfix:before {
+        display: table;
+        content: " ";
+    }
+
+    .clearfix:after {
+        display: table;
+        content: " ";
+        clear: both;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-left {
+        text-align: left;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    label {
+        line-height: 1.42857143;
+        vertical-align: unset;
+    }
+
+    /*打印*/
+    @media print {
+        @page {
+            size: A5 portrait;
+            margin: 0;
+        }
+
+        body * {
+            display: none;
+        }
+
+        body {
+            padding: 0;
+        }
+
+        #printZone,
+        #printArea,
+        #printArea * {
+            display: block;
+        }
+
+        #printZone {
+            left: 0;
+            top: 0;
+        }
+
+    }
+
+    /*打印*/
+    @media screen {
+        .printBtn {
+            display: inline-block;
+            float: right;
+        }
+    }
+
+    body {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        word-break: break-all; !important;
+    }
+
+    #printZone {
+        position: absolute;
+    }
+
+    #printZone span {
+        display: inline;
+    }
+
+    .areas .col-sm-10,
+    .areas .col-sm-12,
+    .areas .col-sm-1,
+    .areas .col-sm-2,
+    .areas .col-sm-3,
+    .areas .col-sm-4,
+    .areas .col-sm-5,
+    .areas .col-sm-6,
+    .areas .col-sm-6,
+    .areas .col-sm-7,
+    .areas .col-sm-8,
+    .areas .col-sm-9 {
+        float: left;
+        position: relative;
+        min-height: 1px;
+        padding-left: 2mm;
+        padding-right: 2mm;
+    }
+
+    .areas .col-sm-3 {
+        width: 25%;
+    }
+
+    .areas .col-sm-4 {
+        width: 33%;
+    }
+
+    .areas .col-sm-6 {
+        width: 50%;
+    }
+
+    .areas {
+        position: relative;
+        font-size: 10.5pt !important;
+        width: 148mm;
+        height: 209mm;
+        padding: 6mm;
+        overflow: hidden;
+        font-family: 'Arial Normal', 'Arial';
+        /*border: 1px solid #000;*/
+    }
+
+    .areas > h4 {
+        text-align: center;
+        margin: 0;
+    }
+
+    .areas > h5 {
+        font-size: 13pt !important;
+        text-align: center;
+        margin: 0 0 2mm 0;
+    }
+
+    .titleArea {
+        margin-bottom: 0.5mm;
+        padding-bottom: 0.5mm;
+        border-bottom: 1pt solid #000;
+    }
+
+    .topArea {
+        border-bottom: 1pt solid #000;
+    }
+
+    .solution,
+    .topArea label {
+        font-size: 10.5pt;
+    }
+
+    .topArea .line:not(:last-child) {
+        margin-bottom: 2mm;
+    }
+
+    .topArea .line:last-child label {
+        vertical-align: top;
+        word-break: break-all;
+    }
+
+    .result-line {
+        font-weight: 700;
+    }
+
+    .allergy-line label {
+        font-weight: normal;
+    }
+
+    .topArea .line .label-left {
+        max-width: 20mm;
+    }
+
+    .topArea .line .label-right {
+        max-width: 103mm;
+        word-break: break-all;
+    }
+
+    .middleArea {
+        height: 109mm;
+        margin: 2mm 0;
+        overflow: hidden;
+    }
+
+    .middleArea h4 {
+        margin: 0 0 2mm 0;
+    }
+
+    #printZone .pr,
+    .middleArea label.text-right {
+        padding-right: 0;
+    }
+
+    #printZone .pl,
+    .middleArea .line > div {
+        padding-left: 0;
+    }
+
+    .item .entrust,
+    .content .item:not(:last-child) {
+        margin-bottom: 1mm;
+    }
+
+    .group,
+    .middleArea p {
+        font-size: 12pt !important;
+    }
+
+    .group {
+        position: relative;
+        padding: 0 0 0 6mm;
+    }
+
+    .group > div:not(:last-child),
+    .solution > div:not(:last-child) {
+        margin-right: 4mm;
+    }
+
+    .g-name,
+    .g-once,
+    .g-spec,
+    .g-amount,
+    .solution > div {
+        display: inline-block;
+        vertical-align: top;
+        float: left;
+        min-height: 1px;
+    }
+
+    .g-index {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .g-name {
+        width: 40mm;
+    }
+
+    .s-once,
+    .g-once {
+        width: 20mm;
+    }
+
+    .g-spec {
+        width: 32mm;
+    }
+
+    .g-amount {
+        width: 18mm;
+    }
+
+    .solution,
+    .entrust {
+        margin-left: 10mm;
+    }
+
+    .s-usage {
+        width: 30mm;
+    }
+
+    .s-freq {
+        width: 30mm;
+        text-align: center;
+    }
+
+    .s-last {
+        width: 16mm;
+    }
+
+    .bottomArea {
+        position: absolute;
+        left: 6mm;
+        right: 6mm;
+        bottom: 10mm;
+    }
+
+    .bottomArea .bd {
+        margin: 1mm 0 2mm 0;
+        border-bottom: 1pt solid #000;
+    }
+
+    .bottomArea .stuff .col-sm-4:first-child,
+    .bottomArea .stuff .col-sm-4:last-child {
+        width: 38mm;
+    }
+
+    .bottomArea .stuff .col-sm-4:nth-child(2) {
+        width: 52mm;
+    }
+
+    .topArea,
+    .middleArea,
+    .bottomArea .stuff {
+        padding: 0 4mm;
+    }
+
+    .middleArea .line,
+    .bottomArea .stuff > div {
+        margin-bottom: 1mm;
+    }
+
+    .areas h4,
+    .areas h5,
+    .strong,
+    .g-index {
+        font-weight: 700;
+    }
+</style>
+
+<body>
+<button type="button" onclick="printW()" class="printBtn">西药处方</button>
+
+<div id="printZone">
+    <div id="temp">
+        <div class="areas" style="page-break-after: always;">
+            <h4 id="clinicName">演示诊所</h4>
+            <h5>处方笺</h5>
+            <div class="titleArea">
+                <div class="col-sm-6 pl">费别：<span class="feeType"></span></div>
+                <div class="col-sm-6 text-right pr">处方编号：<span class="preNumber"></span></div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="topArea">
+                <div class="line">
+                    <div class="col-sm-4 pl">姓名：<span class="name"></span></div>
+                    <div class="col-sm-4 text-center">性别：<span class="gender"></span></div>
+                    <div class="col-sm-4 pr text-right">年龄：<span class="age"></span></div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="line">
+                    <div class="col-sm-6 pl">身份证号：<span class="idCard"></span></div>
+                    <div class="col-sm-6 pr">门诊病历号：<span class="medicalNumber"></span></div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="line">
+                    <div class="col-sm-6 pl">联系电话：<span class="phone"></span></div>
+                    <div class="col-sm-6 pr">开具日期：<span class="date"></span></div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="line">
+                    <div class="col-sm-12 pl">地址：<span class="address"></span></div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="line allergy-line">
+                    <label class="col-sm-2 label-left pl pr">过敏史：</label>
+                    <label class="col-sm-10 label-right pl pr allergy"></label>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="line result-line">
+                    <label class="col-sm-2 label-left pl pr">临床诊断：</label>
+                    <label class="col-sm-10 label-right pl pr result"></label>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="middleArea">
+                <h4>Rp</h4>
+                <div class="content">
+
+                </div>
+            </div>
+            <div class="bottomArea">
+                <div class="page-foot text-right">
+                    第<span class="thisPage">1</span>页 ，共<span class="totalPages">1</span>页
+                </div>
+                <div class="bd"></div>
+                <div class="stuff">
+                    <div class="col-sm-4 pl">医生：<span class="doctor"></span></div>
+                    <div class="col-sm-4 pl pr">药品金额(元)：<span class="strong drugAmount"></span></div>
+                    <div class="col-sm-4 pr">医师签名：</div>
+                </div>
+                <div class="stuff">
+                    <div class="col-sm-4 pl">审核：</div>
+                    <div class="col-sm-4 pl pr">调配：</div>
+                    <div class="col-sm-4 pr">核对、发药：</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="printArea">
+
+    </div>
+</div>
+
+<script>
+    function printW() {
+        var index = 1;
+        var $middleH4 = $(".middleArea h4");
+        var height = $(".middleArea").height();
+        var h4Height = $middleH4.height() + parseFloat($middleH4.css('margin-bottom'));
+        var formerTopHeight = $(".topArea").height(); // 数据填充之前顶部区域的高度
+        var data = {
+            clinicName: '诊所一',
+            feeType: '自费',
+            preNumber: 'S8745147',
+            name: '姓名',
+            gender: '男',
+            age: '30',
+            idCard: '123456789012345678',
+            medicalNumber: 'se123456',
+            phone: '13456789012',
+            date: '2020-11-11',
+            address: '地址',
+            result: '诊断结果',
+            usage: '煎服',
+            freq: '1次/天',
+            last: '2',
+            total: '1',
+            entrust: '嘱托',
+            doctor: 'L医生',
+            allergicHistory: '过敏史',
+            drugAmount: '10',
+            groups: [{
+                groupNo: '1',
+                usage: '口服',
+                freq: '一天三次',
+                last: '3',
+                once: '一次一粒',
+                medicines: [{
+                    name: '阿莫西林胶囊',
+                    once: '一次一粒',
+                    spec: '40mg',
+                    amount: 1,
+                    unit: '盒',
+                    entrust: '嘱托'
+                }]
+            },{
+                groupNo: '2',
+                usage: '冲服',
+                freq: '一天一次',
+                last: '3',
+                medicines: [{
+                    name: '感冒灵颗粒',
+                    once: '一次一包',
+                    spec: '40mg',
+                    amount: 1,
+                    unit: '盒',
+                    entrust: '嘱托'
+                },{
+                    name: '感冒灵颗粒二号',
+                    once: '一次两包',
+                    spec: '80mg',
+                    amount: 2,
+                    unit: '盒',
+                    entrust: '嘱托'
+                }]
+            }]
+        }
+                $("#clinicName").html(data.clinicName);
+                $("#printZone .feeType").html(data.feeType);
+                $("#printZone .preNumber").html(data.preNumber);
+                $("#printZone .name").html(data.name);
+                $("#printZone .gender").html(data.gender);
+                $("#printZone .age").html(data.age);
+                $("#printZone .idCard").html(data.idCard);
+                $("#printZone .medicalNumber").html(data.medicalNumber);
+                $("#printZone .date").html(data.date);
+                $("#printZone .phone").html(data.phone);
+                $("#printZone .address").html(data.address);
+                $("#printZone .result").html(data.result);
+                $("#printZone .doctor").html(data.doctor);
+                $('#printZone .allergy').html(data.allergicHistory);
+                var drugAmount = (data.drugAmount === 0 ? "0" : data.drugAmount);
+                $("#printZone .drugAmount").html(drugAmount ? parseFloat(drugAmount).toFixed(2) : "");
+
+                var laterTopHeight = $(".topArea").height(); // 数据填充之后顶部区域的高度
+                // 如果数据填充后顶部高度改变了（主要针对临床诊断结果太长而导致换行的状况）
+                // ，则需要减去变化的高度并重新设置中间区域的高度
+                if (laterTopHeight > formerTopHeight) {
+                    height = height - laterTopHeight + formerTopHeight;
+                    $(".middleArea").height(height);
+                }
+                // 赋值之后再减去中间部分标题的高度，即为需要展示内容的区域的高度
+                // ，用于判断数据填充之后的高度是否大于此高度，如果大于则视为超出
+                height = height - h4Height;
+
+                var groups = data.groups || [];
+
+                var a = $("#temp").html();
+                $("#printArea").append($(a).addClass("area" + index));
+                for (var i = 0; i < groups.length; i++) {
+                    var area = $(".area" + index);
+                    var d = groups[i];
+                    var medicines = d.medicines;
+                    var sameOnce = (medicines.length <= 1); // 判断是否为一组药
+                    var item = "";
+                    item += '<div class="item" id="item-' + i + '">';
+                    // 每一组的药物
+                    for (var j = 0; j < medicines.length; j++) {
+                        var m = medicines[j];
+                        item +=
+                            '<div class="group clearfix">' +
+                            (j === 0 ? ('<label class="g-index">' + d.groupNo + '：</label>') : '') +
+                            '    <div class="g-name">' + (m.name || '') + '</div>' +
+                            '<div class="g-once">' + (sameOnce ? '' : m.once) + '</div>' +
+                            '    <div class="g-spec">' + (m.spec ? ('(' + m.spec + ')') : '') + '</div>' +
+                            '    <div class="g-amount">&times;' + (m.amount || '0') + (m.unit || '') + '</div>' +
+                            '</div>' + (m.entrust ? ('<div class="entrust">嘱托：' + m.entrust + '</div>') : '' );
+                    }
+                    // 这一组药物的用法
+                    item +=
+                        '<div class="solution clearfix">' +
+                        '    <div class="s-usage">用法：' + d.usage + '</div>' +
+                        (sameOnce ? ('<div class="s-once">' + d.once + '</div>') : '') +
+                        '    <div class="s-freq">' + d.freq + '</div>' +
+                        '    <div class="s-last">&times;' + d.last + '</div>' +
+                        '</div></div>';
+                    area.find(".content").append(item);
+                    var h = area.find(".content").height();
+                    area.find(".thisPage").html(index);
+
+                    var isLast = i === (groups.length - 1);
+                    // 如果是最后一个，则需要算上“以下空白”部分的高度
+                    if (isLast) {
+                        h = h + 22;
+                    }
+                    if (h > height) {
+                        $("#item-" + i).remove();
+                        index++;
+                        var x = $("#temp").html();
+                        $("#printArea").append($(x).addClass("area" + index));
+                        i--;
+                    } else {
+                        if (isLast) {
+                            area.find(".middleArea").append("<p>（以下空白）</p>");
+                        }
+                    }
+                }
+                var totalPages = $(".areas").length - 1;
+                $(".totalPages").html(totalPages);
+                window.print();
+    
+    }
+</script>
+</body>
+</html>
