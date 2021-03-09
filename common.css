@@ -28,8 +28,10 @@
 
 @media screen {
     .printBtn {
-        display: inline-block;
-        float: right;
+        position: fixed;
+        left: 155mm;
+        top: 10vh;
+        font-size: 20px;
     }
 }
 
